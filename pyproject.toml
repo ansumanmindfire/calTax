@@ -1,0 +1,23 @@
+[project]
+name = "caltax"
+version = "0.1.0"
+description = "Your tax calculation at ease"
+authors = [
+    {name = "ansumanmindfire",email = "ansumanp@mindfiresolutions.com"}
+]
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "fastapi (>=0.141.1,<0.142.0)",
+    "uvicorn (>=0.52.4,<0.53.0)",
+    "python-dotenv (>=1.2.3,<2.0.0)",
+    "pydantic (>=2.13.4,<3.0.0)",
+    "sqlalchemy (>=2.0.52,<3.0.0)"
+]
+
+[tool.poetry]
+package-mode = false
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
