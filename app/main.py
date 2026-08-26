@@ -11,7 +11,9 @@ from app.exceptions import (
     global_exception_handler,
     http_exception_handler,
     request_validation_handler,
+    cancelled_error_handler
 )
+import asyncio
 
 logger.info("Initializing FastAPI application...")
 
@@ -26,6 +28,7 @@ app.add_exception_handler(RequestValidationError, request_validation_handler)
 app.add_exception_handler(StarletteHTTPException, http_exception_handler)
 app.add_exception_handler(AppError, app_error_handler)
 app.add_exception_handler(Exception, global_exception_handler)
+app.add_exception_handler(asyncio.CancelledError, cancelled_error_handler)
 
 
 @app.get("/")
