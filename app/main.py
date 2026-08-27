@@ -12,7 +12,6 @@ from app.exceptions import (
     http_exception_handler,
     request_validation_handler
 )
-import asyncio
 
 from app.database import engine
 from app.models.tax_record import Base
