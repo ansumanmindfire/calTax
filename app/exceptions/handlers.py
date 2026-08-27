@@ -106,13 +106,3 @@ async def global_exception_handler(request: Request, exc: Exception) -> JSONResp
             "path": request.url.path,
         },
     )
-
-
-async def cancelled_error_handler(request: Request, exc: asyncio.CancelledError) -> None:
-    """Re-raise CancelledError so it is not logged as an unhandled exception.
-
-    Args:
-        request: The FastAPI request.
-        exc: The CancelledError (re-raised).
-    """
-    raise exc

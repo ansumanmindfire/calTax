@@ -10,7 +10,6 @@ from app.exceptions.domain import (
 )
 from app.exceptions.handlers import (
     app_error_handler,
-    cancelled_error_handler,
     global_exception_handler,
     http_exception_handler,
     request_validation_handler,
@@ -26,6 +25,5 @@ __all__ = [
     "request_validation_handler",
     "http_exception_handler",
     "app_error_handler",
-    "global_exception_handler",
-    "cancelled_error_handler",
+    "global_exception_handler"
 ]
