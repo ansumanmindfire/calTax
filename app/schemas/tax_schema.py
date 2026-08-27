@@ -1,10 +1,19 @@
-"""Tax calculation Pydantic request and response schemas"""
+"""Tax calculation Pydantic request and response schemas."""
 
+from enum import Enum
 from pydantic import BaseModel, Field
 
 
+class CalculationMode(str, Enum):
+    """Tax calculation mode options for API queries."""
+
+    NEW = "new"
+    OLD = "old"
+    COMPARE = "compare"
+
+
 class TaxCalculationRequest(BaseModel):
-    """Input payload for tax calculation"""
+    """Input payload for tax calculation."""
 
     gross_income: float = Field(
         ...,
@@ -29,7 +38,7 @@ class TaxCalculationRequest(BaseModel):
 
 
 class Regime(BaseModel):
-    """Detailed tax computation breakdown"""
+    """Detailed tax computation breakdown."""
 
     taxable_income: float = Field(
         ...,
@@ -57,8 +66,25 @@ class Regime(BaseModel):
     )
 
 
+class SingleRegimeResponse(BaseModel):
+    """Response when calculating for a single regime (new or old)."""
+
+    gross_income: float = Field(
+        ...,
+        description="Gross income provided by the user",
+    )
+    regime: str = Field(
+        ...,
+        description="Calculated regime name",
+    )
+    details: Regime = Field(
+        ...,
+        description="Detailed tax computation breakdown",
+    )
+
+
 class TaxCalculationResponse(BaseModel):
-    """Response after tax calculation"""
+    """Response after tax calculation and comparison."""
 
     gross_income: float = Field(
         ...,

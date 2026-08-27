@@ -1,23 +1,37 @@
 """Tax calculation API router."""
 
-from fastapi import APIRouter, Depends, status
+from typing import Union
+from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app.schemas.tax_schema import TaxCalculationRequest, TaxCalculationResponse
+from app.schemas.tax_schema import (
+    CalculationMode,
+    SingleRegimeResponse,
+    TaxCalculationRequest,
+    TaxCalculationResponse,
+)
 from app.services import get_tax_calculation, get_tax_history
 
 router = APIRouter()
 
+
 @router.post(
     "/calculate",
-    response_model=TaxCalculationResponse,
+    response_model=Union[TaxCalculationResponse, SingleRegimeResponse],
     status_code=status.HTTP_200_OK,
-    summary="Calculate income tax for Old and New regimes",
+    summary="Calculate income tax for Old, New, or Compare both regimes",
 )
-async def calculate_tax(payload: TaxCalculationRequest, db: Session = Depends(get_db)) -> TaxCalculationResponse:
-    """Calculate tax under Old and New regimes."""
-    return await get_tax_calculation(payload, db)
+async def calculate_tax(
+    payload: TaxCalculationRequest,
+    mode: CalculationMode = Query(
+        default=CalculationMode.COMPARE,
+        description="Calculation mode: 'new', 'old', or 'compare'",
+    ),
+    db: Session = Depends(get_db),
+) -> Union[TaxCalculationResponse, SingleRegimeResponse]:
+    """Calculate tax under Old Regime, New Regime, or compare both."""
+    return await get_tax_calculation(payload=payload, db=db, mode=mode)
 
 
 @router.get(
