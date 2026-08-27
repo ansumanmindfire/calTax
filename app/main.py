@@ -10,13 +10,13 @@ from app.exceptions import (
     app_error_handler,
     global_exception_handler,
     http_exception_handler,
-    request_validation_handler,
-    cancelled_error_handler
+    request_validation_handler
 )
 import asyncio
 
 from app.database import engine
 from app.models.tax_record import Base
+from app.routers import tax_router
 
 Base.metadata.create_all(bind=engine)
 
@@ -33,10 +33,11 @@ app.add_exception_handler(RequestValidationError, request_validation_handler)
 app.add_exception_handler(StarletteHTTPException, http_exception_handler)
 app.add_exception_handler(AppError, app_error_handler)
 app.add_exception_handler(Exception, global_exception_handler)
-app.add_exception_handler(asyncio.CancelledError, cancelled_error_handler)
+
+# Register API Routers
+app.include_router(tax_router, prefix="/api/v1/tax", tags=["Tax Calculator"])
 
 
 @app.get("/")
 def home():
-    """Health / root probe endpoint."""
     return {"message": f"Welcome to {settings.PROJECT_NAME} API"}
