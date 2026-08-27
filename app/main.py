@@ -15,6 +15,11 @@ from app.exceptions import (
 )
 import asyncio
 
+from app.database import engine
+from app.models.tax_record import Base
+
+Base.metadata.create_all(bind=engine)
+
 logger.info("Initializing FastAPI application...")
 
 app = FastAPI(
