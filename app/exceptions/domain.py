@@ -1,4 +1,4 @@
-"""Domain exception classes for calTax application"""
+"""Custom exception classes for calTax"""
 
 
 class AppError(Exception):
@@ -11,12 +11,12 @@ class AppError(Exception):
         """Initialize AppError with a message.
 
         Args:
-            message: Human-readable error description.
+            message: Error message.
         """
         super().__init__(message)
         self.message = message
 
-    def to_response_content(self, path: str) -> dict:
+    def response(self, path: str) -> dict:
         """Build the JSON body for the error.
 
         Args:
@@ -32,17 +32,10 @@ class AppError(Exception):
 
 
 class UnauthorizedError(AppError):
-    """Credentials invalid or missing."""
+    """User Unauthorized to access resource."""
 
     status_code = 401
     code = "unauthorized"
-
-
-class ForbiddenError(AppError):
-    """Access not permitted."""
-
-    status_code = 403
-    code = "forbidden"
 
 
 class NotFoundError(AppError):
@@ -53,7 +46,7 @@ class NotFoundError(AppError):
 
 
 class ConflictError(AppError):
-    """Resource already exists or conflicts."""
+    """Resource already exists."""
 
     status_code = 409
     code = "conflict"

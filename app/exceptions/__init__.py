@@ -3,7 +3,6 @@
 from app.exceptions.domain import (
     AppError,
     ConflictError,
-    ForbiddenError,
     InternalError,
     NotFoundError,
     UnauthorizedError,
@@ -20,7 +19,6 @@ from app.exceptions.handlers import (
 __all__ = [
     "AppError",
     "UnauthorizedError",
-    "ForbiddenError",
     "NotFoundError",
     "ConflictError",
     "ValidationError",
