@@ -1,20 +1,57 @@
 """Tax calculation service."""
 
 import asyncio
+from typing import Union
 from sqlalchemy.orm import Session
 
 from app.exceptions import ValidationError
 from app.models.tax_record import TaxRecord
 from app.repository import create_tax_record, get_all_tax_records
-from app.schemas.tax_schema import TaxCalculationRequest, TaxCalculationResponse
+from app.schemas.tax_schema import (
+    CalculationMode,
+    SingleRegimeResponse,
+    TaxCalculationRequest,
+    TaxCalculationResponse,
+)
 from app.utils import calculate_new_regime_tax, calculate_old_regime_tax
 
 
-async def get_tax_calculation(payload: TaxCalculationRequest, db: Session) -> TaxCalculationResponse:
-    """Compute tax for Old and New regimes."""
+async def get_tax_calculation(
+    payload: TaxCalculationRequest,
+    db: Session,
+    mode: CalculationMode = CalculationMode.COMPARE,
+) -> Union[TaxCalculationResponse, SingleRegimeResponse]:
+    """Compute tax for Old Regime, New Regime, or full Comparison based on mode."""
+
+    # mode == CalculationMode.NEW
+    if mode == CalculationMode.NEW:
+        new_regime = await calculate_new_regime_tax(
+            gross_income=payload.gross_income,
+            is_salaried=payload.is_salaried,
+        )
+        return SingleRegimeResponse(
+            gross_income=payload.gross_income,
+            regime="New Tax Regime",
+            details=new_regime,
+        )
+
     if payload.total_deductions > payload.gross_income:
         raise ValidationError("Total deductions cannot exceed total gross annual income.")
 
+    # mode == CalculationMode.OLD
+    if mode == CalculationMode.OLD:
+        old_regime = await calculate_old_regime_tax(
+            gross_income=payload.gross_income,
+            is_salaried=payload.is_salaried,
+            total_deductions=payload.total_deductions,
+        )
+        return SingleRegimeResponse(
+            gross_income=payload.gross_income,
+            regime="Old Tax Regime",
+            details=old_regime,
+        )
+
+    # mode == CalculationMode.COMPARE
     old_regime, new_regime = await asyncio.gather(
         calculate_old_regime_tax(
             gross_income=payload.gross_income,
