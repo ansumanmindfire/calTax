@@ -1,0 +1,14 @@
+services:
+  caltax-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: caltax_app
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - ./tax_calculator.db:/code/tax_calculator.db
+      - ./logs:/code/logs
+    restart: unless-stopped
