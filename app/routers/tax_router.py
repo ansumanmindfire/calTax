@@ -5,7 +5,6 @@ from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app.models import TaxRecord
 from app.schemas.tax_schema import (
     CalculationMode,
     SingleRegimeResponse,
@@ -49,7 +48,7 @@ async def calculate_tax(
     status_code=status.HTTP_200_OK,
     summary="Get all tax calculation records",
 )
-def fetch_tax_history(db: Session = Depends(get_db)) -> list[TaxRecord]:
+def fetch_tax_history(db: Session = Depends(get_db)):
     """Retrieve all historical tax calculation records.
 
     Args:
