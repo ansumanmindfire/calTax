@@ -30,7 +30,16 @@ async def calculate_tax(
     ),
     db: Session = Depends(get_db),
 ) -> Union[TaxCalculationResponse, SingleRegimeResponse]:
-    """Calculate tax under Old Regime, New Regime, or compare both."""
+    """Calculate tax for Old Regime, New Regime, or comparison mode.
+
+    Args:
+        payload: Income details, employment status, and deductions.
+        mode: Calculation mode ('compare', 'old', or 'new').
+        db: Database session dependency.
+
+    Returns:
+        TaxCalculationResponse or SingleRegimeResponse: Tax calculation result.
+    """
     return await get_tax_calculation(payload=payload, db=db, mode=mode)
 
 
@@ -40,5 +49,13 @@ async def calculate_tax(
     summary="Get all tax calculation records",
 )
 def fetch_tax_history(db: Session = Depends(get_db)):
-    """Retrieve all tax calculation records stored in DB."""
+    """Retrieve all historical tax calculation records.
+
+    Args:
+        db: Database session dependency.
+
+    Returns:
+        list[TaxRecord]: List of stored tax calculation records.
+    """
     return get_tax_history(db)
+
