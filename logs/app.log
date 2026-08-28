@@ -589,3 +589,17 @@ Traceback (most recent call last):
     raise effect
 sqlalchemy.exc.SQLAlchemyError: DB Connection Lost
 2026-08-27 10:57:41 | INFO     | caltax:<module>:22 - Initializing FastAPI application...
+2026-08-27 17:45:08 | ERROR    | caltax:create_tax_record:34 - Database error during create_tax_record: DB Connection Lost
+Traceback (most recent call last):
+  File "D:\ansuman\Official_Learning\python\calTax\app\repository\tax_repository.py", line 29, in create_tax_record
+    db.commit()
+    ~~~~~~~~~^^
+  File "C:\Users\Mindfire Intern 11\AppData\Local\Python\pythoncore-3.14-64\Lib\unittest\mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Mindfire Intern 11\AppData\Local\Python\pythoncore-3.14-64\Lib\unittest\mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Mindfire Intern 11\AppData\Local\Python\pythoncore-3.14-64\Lib\unittest\mock.py", line 1241, in _execute_mock_call
+    raise effect
+sqlalchemy.exc.SQLAlchemyError: DB Connection Lost
