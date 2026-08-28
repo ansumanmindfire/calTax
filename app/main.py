@@ -3,6 +3,7 @@
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import logger, settings
 from app.exceptions import (
@@ -27,7 +28,14 @@ app = FastAPI(
     description=settings.PROJECT_DESCRIPTION,
 )
 
-# Register Global Exception Handlers
+# CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
+
 app.add_exception_handler(RequestValidationError, request_validation_handler)
 app.add_exception_handler(StarletteHTTPException, http_exception_handler)
 app.add_exception_handler(AppError, app_error_handler)
