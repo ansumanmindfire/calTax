@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
 from app.database import get_db
+from app.models import TaxRecord
 from app.schemas.tax_schema import (
     CalculationMode,
     SingleRegimeResponse,
@@ -30,7 +31,16 @@ async def calculate_tax(
     ),
     db: Session = Depends(get_db),
 ) -> Union[TaxCalculationResponse, SingleRegimeResponse]:
-    """Calculate tax under Old Regime, New Regime, or compare both."""
+    """Calculate tax for Old Regime, New Regime, or comparison mode.
+
+    Args:
+        payload: Income details, employment status, and deductions.
+        mode: Calculation mode ('compare', 'old', or 'new').
+        db: Database session dependency.
+
+    Returns:
+        TaxCalculationResponse or SingleRegimeResponse: Tax calculation result.
+    """
     return await get_tax_calculation(payload=payload, db=db, mode=mode)
 
 
@@ -39,6 +49,14 @@ async def calculate_tax(
     status_code=status.HTTP_200_OK,
     summary="Get all tax calculation records",
 )
-def fetch_tax_history(db: Session = Depends(get_db)):
-    """Retrieve all tax calculation records stored in DB."""
+def fetch_tax_history(db: Session = Depends(get_db)) -> list[TaxRecord]:
+    """Retrieve all historical tax calculation records.
+
+    Args:
+        db: Database session dependency.
+
+    Returns:
+        list[TaxRecord]: List of stored tax calculation records.
+    """
     return get_tax_history(db)
+
